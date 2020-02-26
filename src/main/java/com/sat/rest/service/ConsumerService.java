@@ -1,19 +1,20 @@
 package com.sat.rest.service;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
+import com.sat.rest.facade.impl.ConsumerFacadeImpl;
 import com.sat.rest.model.Quote;
 
 @Service
 public class ConsumerService {
 
-	//get Weather data
-	public Quote getNeo() {		
-		RestTemplate restTemplate = new RestTemplate();	    
-		Quote quote = restTemplate.getForObject("https://gturnquist-quoters.cfapps.io/api/random", Quote.class);
-		return quote;
-	}
+  @Autowired
+  ConsumerFacadeImpl consumerFacadeImpl;
+
+  // get Weather data
+  public Quote getNeo() {
+    return consumerFacadeImpl.getNeo();
+  }
 
 }
