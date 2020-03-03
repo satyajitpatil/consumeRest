@@ -18,5 +18,9 @@ public class ConsumerService {
   public Quote getNeo() {
     return consumerFacadeImpl.getNeo();
   }
+  
+  public String getHello() {
+    return consumerFacadeImpl.getHello();
+  }
 
 }

@@ -29,15 +29,14 @@ public class ConsumerControllerTest {
   public void testGetNeo() {
     when(ConsumerFacade.getHello()).thenReturn("hello");
     //doThrow(new RuntimeException("exception ocurred")).when(ConsumerFacade).getHello();
-    assertEquals("hello",ConsumerFacade.getHello());
+    assertEquals("test hello",consumerController.getHello());
     verify(ConsumerFacade).getHello();
   }
   
-  @Test(expected = RuntimeException.class)
-  public void testGetNeoexception() {
-    doThrow(new RuntimeException("exception ocurred")).when(ConsumerFacade).getHello();
-    assertEquals("hellooooo",ConsumerFacade.getHello());
-    verify(ConsumerFacade).getHello();
-  }
+  /*
+   * @Test(expected = RuntimeException.class) public void testGetNeoexception() { doThrow(new
+   * RuntimeException("exception ocurred")).when(ConsumerFacade).getHello();
+   * assertEquals("hellooooo",ConsumerFacade.getHello()); verify(ConsumerFacade).getHello(); }
+   */
 
 }
