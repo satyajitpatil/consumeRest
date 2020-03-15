@@ -1,5 +1,6 @@
 package com.sat.rest.facade.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import com.sat.rest.facade.ConsumerFacade;
@@ -20,21 +22,57 @@ import com.sat.rest.model.Quote;
 @EnableAutoConfiguration
 public class ConsumerFacadeImpl implements ConsumerFacade {
 
-  @Value("${endpoint.url}")
-  private String baseUrl;
+  @Value("${endpoint.url.BloodBank.ByName}")
+  private String byNameUrl;
+  
+  @Value("${endpoint.url.BloodBank.ByCity}")
+  private String byCityUrl;
+  
+  @Value("${endpoint.url.BloodBank.AddBloodBank}")
+  private String addUrl;
 
   RestTemplate restTemplate = new RestTemplate();
 
   @Override
-  public Quote getNeo() {
-    Quote quote = restTemplate.getForObject(baseUrl, Quote.class);
-    return quote;
+  public String getHello() throws RuntimeException {
+    return "hello";
   }
 
   @Override
-  public String getHello() throws RuntimeException {
-    // TODO Auto-generated method stub
-    return "hello";
+  public BloodBank getBloodBank(String bloodBankName) throws UnsupportedEncodingException {
+    HttpEntity<BloodBank> entity = new HttpEntity<BloodBank>(getHttpHeaders());
+    ResponseEntity<BloodBank> response = restTemplate.exchange(byNameUrl,HttpMethod.GET, entity, BloodBank.class);
+    
+    return response.getBody();
   }
+
+  @Override
+  public BloodBank[] getBloodBankByCity(String city) throws UnsupportedEncodingException {
+    HttpEntity<BloodBank[]> entity = new HttpEntity<BloodBank[]>(getHttpHeaders());
+    ResponseEntity<BloodBank[]> response = restTemplate.exchange(byCityUrl,HttpMethod.GET, entity, BloodBank[].class);
+    
+    return response.getBody();
+  }
+
+  @Override
+  public void addBloodBank(BloodBank bloodBank) throws UnsupportedEncodingException {
+    HttpEntity<BloodBank> entity = new HttpEntity<BloodBank>(getHttpHeaders());
+    restTemplate.exchange(byNameUrl,HttpMethod.GET, entity, BloodBank.class);
+  }
+
+  
+  //Headers
+  private HttpHeaders getHttpHeaders() throws UnsupportedEncodingException {
+    
+    HttpHeaders headers = new HttpHeaders();
+    String credentials = "user:pwd";
+    String encoded = Base64.getEncoder().encodeToString(credentials.getBytes("utf-8"));
+    String authHeader = "Basic "+encoded;
+    headers.set("Authorization", authHeader);
+    System.out.println(authHeader);
+    return headers;
+    
+  }
+
 
 }

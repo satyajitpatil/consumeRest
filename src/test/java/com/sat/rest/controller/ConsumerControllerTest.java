@@ -1,42 +1,59 @@
 package com.sat.rest.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.sat.rest.facade.ConsumerFacade;
+import com.sat.rest.facade.impl.ConsumerFacadeImpl;
+import com.sat.rest.service.ConsumerService;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@WebMvcTest(ConsumerController.class)
 public class ConsumerControllerTest {
-  
-  @InjectMocks
-  private ConsumerController consumerController;
 
-  @Mock
-  private ConsumerFacade ConsumerFacade;  
-  
+  @Autowired
+  private MockMvc mockMvc;
+
+  @MockBean
+  private ConsumerService ConsumerService;
+
+  @MockBean
+  private ConsumerFacadeImpl ConsumerFacadeImpl;
+
   @Before
   public void setUp() throws Exception {
-    //ConsumerFacade = mock(ConsumerFacade.class);
+
   }
 
   @Test
   public void testGetNeo() {
-    when(ConsumerFacade.getHello()).thenReturn("hello");
-    //doThrow(new RuntimeException("exception ocurred")).when(ConsumerFacade).getHello();
-    assertEquals("test hello",consumerController.getHello());
-    verify(ConsumerFacade).getHello();
+
   }
-  
-  /*
-   * @Test(expected = RuntimeException.class) public void testGetNeoexception() { doThrow(new
-   * RuntimeException("exception ocurred")).when(ConsumerFacade).getHello();
-   * assertEquals("hellooooo",ConsumerFacade.getHello()); verify(ConsumerFacade).getHello(); }
-   */
+
+  @Test
+  public void testGetHello() throws Exception {
+
+    Mockito.when(ConsumerFacadeImpl.getHello()).thenReturn("hello");
+
+    mockMvc.perform(MockMvcRequestBuilders.get("/hello").contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string("hello"));
+
+    Mockito.verify(ConsumerFacadeImpl).getHello();
+
+  }
 
 }
