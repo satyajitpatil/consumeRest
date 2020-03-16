@@ -14,4 +14,10 @@ public interface ConsumerFacade {
   
   public void addBloodBank(BloodBank bloodBank) throws UnsupportedEncodingException; 
   
+  // webclient functions
+  
+  public String getHelloWC();
+  
+  public Mono<BloodBank> getBloodBankWC(String bloodBankName) throws UnsupportedEncodingException;
+  
 }
