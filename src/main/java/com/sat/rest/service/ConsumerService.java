@@ -33,5 +33,9 @@ public class ConsumerService {
   public void addBloodBank(BloodBank bloodBank) throws UnsupportedEncodingException {
     consumerFacadeImpl.addBloodBank(bloodBank);
   }
+  
+  public Mono<BloodBank> getBloodBankWC(String bloodBankName) throws UnsupportedEncodingException {
+	  return consumerFacadeImpl.getBloodBankWC(bloodBankName);
+  }
 
 }
