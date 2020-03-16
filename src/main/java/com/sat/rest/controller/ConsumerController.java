@@ -55,14 +55,15 @@ public class ConsumerController {
     }
   }
 
-  // flux and mono
+ // flux and mono
   @GetMapping(value = "/Mono/BloodBank/name/{bloodBankName}",
       produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
   public Mono<BloodBank> getBloodBankMono(@PathVariable("bloodBankName") String bloodBankName)
       throws UnsupportedEncodingException {
 
-    BloodBank bb = consumerService.getBloodBank(bloodBankName);
-    return Mono.just(bb);
+    //BloodBank bb = consumerService.getBloodBank(bloodBankName);
+    Mono<BloodBank> monoBloodBank = consumerService.getBloodBankWC(bloodBankName);
+    return monoBloodBank;
 
   }
   
