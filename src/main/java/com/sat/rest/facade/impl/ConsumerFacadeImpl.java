@@ -61,18 +61,47 @@ public class ConsumerFacadeImpl implements ConsumerFacade {
   }
 
   
-  //Headers
-  private HttpHeaders getHttpHeaders() throws UnsupportedEncodingException {
-    
-    HttpHeaders headers = new HttpHeaders();
-    String credentials = "user:pwd";
-    String encoded = Base64.getEncoder().encodeToString(credentials.getBytes("utf-8"));
-    String authHeader = "Basic "+encoded;
-    headers.set("Authorization", authHeader);
-    System.out.println(authHeader);
-    return headers;
-    
-  }
+	// Headers
+	private HttpHeaders getHttpHeaders() throws UnsupportedEncodingException {
+
+		HttpHeaders headers = new HttpHeaders();
+				headers.set("Authorization", passEncode());
+		System.out.println(passEncode());
+		return headers;
+
+	}
+	
+	private String passEncode() throws UnsupportedEncodingException {
+		String credentials = "user:pwd";
+		String encoded = Base64.getEncoder().encodeToString(credentials.getBytes("utf-8"));
+		String authHeader = "Basic " + encoded;
+		return authHeader;
+
+	}
+	
+	private WebClient getWebClient() throws UnsupportedEncodingException {
+		WebClient wb = WebClient.builder()
+				.baseUrl(byNameUrl)
+				.defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+				.defaultHeader(HttpHeaders.AUTHORIZATION, passEncode())
+				.build();
+		
+		return wb;
+	}
+
+	@Override
+	public String getHelloWC() {
+		return null;
+	}
+
+	@Override
+	public Mono<BloodBank> getBloodBankWC(String bloodBankName) throws UnsupportedEncodingException{
+				WebClient wb = getWebClient();
+				return wb.get()
+			            .uri(byNameUrl)
+			            .retrieve()
+			            .bodyToMono(BloodBank.class);
+	}
 
 
 }
